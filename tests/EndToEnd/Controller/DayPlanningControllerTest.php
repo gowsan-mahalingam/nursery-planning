@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Tests\EndToEnd\Controller;
 
-use App\Adapters\Secondary\Fixtures\AppFixture;
 use App\Tests\Factory\ChildFactory;
 use App\Tests\Factory\ParentsFactory;
 use PHPUnit\Framework\Attributes\Test;
@@ -34,9 +33,7 @@ class DayPlanningControllerTest extends WebTestCase
     public function create_day_planning(): void
     {
         $client = static::createClient();
-        $parent = ParentsFactory::createOne([
-            'email' => AppFixture::PARENTS_EMAIL
-        ])->_real();
+        $parent = ParentsFactory::createOne()->_real();
 
         ChildFactory::createOne([
             'parents' => $parent

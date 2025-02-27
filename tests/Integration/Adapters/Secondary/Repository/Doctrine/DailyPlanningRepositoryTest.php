@@ -2,7 +2,6 @@
 
 namespace App\Tests\Integration\Adapters\Secondary\Repository\Doctrine;
 
-use App\Adapters\Secondary\Fixtures\AppFixture;
 use App\Adapters\Secondary\Repositories\DailyPlanningRepositoryInterface;
 use App\BusinessLogic\Models\DailyPlanning;
 use App\Tests\Factory\ChildFactory;
@@ -44,9 +43,7 @@ class DailyPlanningRepositoryTest extends KernelTestCase
     #[Test]
     public function should_save_daily_planning(): void
     {
-        $child = ChildFactory::createOne([
-            'name' => AppFixture::CHILD_NAME,
-        ])->_real();
+        $child = ChildFactory::createOne()->_real();
 
         $newDailyPlanning = new DailyPlanning($child, new \DateTime("2024-01-01 08:00"), new \DateTime("2024-01-01 09:00"));
 
