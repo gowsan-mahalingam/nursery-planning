@@ -16,7 +16,7 @@ logs:
 	$(DOCKER_COMPOSE) logs -f
 
 # 🔥 Symfony
-sf-console:
+cs:
 	docker exec -it $(PHP_CONTAINER) php bin/console $(cmd)
 
 sf-clear-cache:

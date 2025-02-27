@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Factory;
+namespace App\Tests\Factory;
 
 use App\BusinessLogic\Models\DailyPlanning;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;

@@ -5,6 +5,7 @@ namespace App\Tests\Unit\BusinessLogic\UseCases\DayPlanning;
 use App\Adapters\Secondary\Repositories\Fake\FakeDailyPlanningRepository;
 use App\BusinessLogic\Models\Child;
 use App\BusinessLogic\Models\DailyPlanning;
+use App\BusinessLogic\Models\Parents;
 use App\BusinessLogic\UseCases\DayPlanning\CreateDayPlanningUseCase;
 use DateTime;
 use Exception;
@@ -19,7 +20,7 @@ class createDayPlanningTest extends TestCase
 
         $startTime = new DateTime("2024-01-01 08:00");
         $endTime = new DateTime("2024-01-02 08:00");
-        $child = new Child('John Doe');
+        $child = $this->createChildWithParent();
         $this->assertExpectException($child, $startTime, $endTime);
     }
 
@@ -28,7 +29,7 @@ class createDayPlanningTest extends TestCase
     {
         $startTime = new DateTime("2024-01-01 08:00");
         $endTime = new DateTime("2024-01-01 07:00");
-        $child = new Child('John Doe');
+        $child = $this->createChildWithParent();
         $this->assertExpectException($child, $startTime, $endTime);
     }
     #[Test]
@@ -36,7 +37,7 @@ class createDayPlanningTest extends TestCase
     {
         $startTime = new DateTime("2024-01-01 08:00");
         $endTime = new DateTime("2024-01-01 08:00");
-        $child = new Child('John Doe');
+        $child = $this->createChildWithParent();
         $this->assertExpectException($child, $startTime, $endTime);
     }
 
@@ -45,7 +46,7 @@ class createDayPlanningTest extends TestCase
     {
         $startTime = new DateTime("2024-01-01 08:00");
         $endTime = new DateTime("2024-01-01 09:00");
-        $child = new Child('John Doe');
+        $child = $this->createChildWithParent();
         $this->assertExpectException($child, $startTime, $endTime);
     }
 
@@ -58,5 +59,13 @@ class createDayPlanningTest extends TestCase
         $createDayPlanningUseCase = new CreateDayPlanningUseCase($dailyPlanning);
         $this->expectException(Exception::class);
         $createDayPlanningUseCase->execute($child, $startTime, $endTime);
+    }
+
+    private function createChildWithParent(): Child
+    {
+        $parent = new Parents('parent@email.com', 'password');
+        $child = new Child('John Doe', $parent);
+
+        return $child;
     }
 }

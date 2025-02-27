@@ -4,18 +4,46 @@ declare(strict_types=1);
 
 namespace App\Tests\EndToEnd\Controller;
 
+use App\Adapters\Secondary\Fixtures\AppFixture;
+use App\Tests\Factory\ChildFactory;
+use App\Tests\Factory\ParentsFactory;
 use PHPUnit\Framework\Attributes\Test;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
 
 class DayPlanningControllerTest extends WebTestCase
 {
+    use ResetDatabase, Factories;
     #[Test]
-    public function createDayPlanning(): void
+    public function should_not_allowed_without_authentication(): void
     {
         $client = static::createClient();
-        $container = static::getContainer();
-        $entityManager = $container->get('doctrine')->getManager();
-        $entityManager->getConnection()->executeStatement('DELETE FROM daily_planning');
+        $client->request('POST', '/day-planning', [
+            'date' => '2024-01-01',
+            'startTime' => '09:00',
+            'endTime' => '17:00'
+        ],[], [
+            'HTTP_CONTENT_TYPE' => 'application/json',
+            'HTTP_ACCEPT' => 'application/json'
+        ]);
+        $this->assertResponseStatusCodeSame(401);
+    }
+
+    #[Test]
+    public function create_day_planning(): void
+    {
+        $client = static::createClient();
+        $parent = ParentsFactory::createOne([
+            'email' => AppFixture::PARENTS_EMAIL
+        ])->_real();
+
+        ChildFactory::createOne([
+            'parents' => $parent
+        ]);
+
+        $client->loginUser($parent);
+
         $client->request('POST', '/day-planning', [
             'date' => '2024-01-01',
             'startTime' => '09:00',
