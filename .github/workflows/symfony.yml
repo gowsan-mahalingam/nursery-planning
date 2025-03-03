@@ -12,6 +12,22 @@ permissions:
 jobs:
   symfony-tests:
     runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: test_db
+          MYSQL_USER: symfony
+          MYSQL_PASSWORD: symfony
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h localhost"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -20,7 +36,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, xml, ctype, iconv, sqlite3, pdo_sqlite
+          extensions: mbstring, xml, ctype, iconv, pdo_mysql
           tools: composer:v2
 
       - name: Copy .env.test.local
@@ -37,12 +53,28 @@ jobs:
       - name: Install Dependencies
         run: composer install --no-interaction --prefer-dist
 
-      - name: Create SQLite Database
+      - name: Wait for MySQL to be ready
         run: |
-          mkdir -p data
-          touch data/database.sqlite
+          for i in {1..30}; do
+            mysqladmin ping -h 127.0.0.1 --silent && echo "MySQL is up" && exit 0
+            echo "Waiting for MySQL..."
+            sleep 2
+          done
+          echo "MySQL did not start in time" && exit 1
+
+      - name: Setup Database
+        run: |
+          php bin/console doctrine:database:create --if-not-exists
+          php bin/console doctrine:migrations:migrate --no-interaction
+        env:
+          DATABASE_URL: "mysql://symfony:symfony@127.0.0.1:3306/test_db"
+
+      - name: Clear Symfony Cache
+        run: php bin/console cache:clear --no-warmup
+        env:
+          DATABASE_URL: "mysql://symfony:symfony@127.0.0.1:3306/test_db"
 
       - name: Run PHPUnit tests
         env:
-          DATABASE_URL: sqlite:///%kernel.project_dir%/data/database.sqlite
+          DATABASE_URL: "mysql://symfony:symfony@127.0.0.1:3306/test_db"
         run: vendor/bin/phpunit
