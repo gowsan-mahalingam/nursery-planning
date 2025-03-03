@@ -1,21 +1,21 @@
 <?php
 
-namespace App\Tests\Unit\BusinessLogic\UseCases\DayPlanning;
+namespace App\Tests\Unit\BusinessLogic\UseCases\Schedule;
 
-use App\Adapters\Secondary\Repositories\Fake\FakeDailyPlanningRepository;
+use App\Adapters\Secondary\Repositories\Fake\FakeScheduleRepository;
 use App\BusinessLogic\Models\Child;
-use App\BusinessLogic\Models\DailyPlanning;
 use App\BusinessLogic\Models\Parents;
-use App\BusinessLogic\UseCases\DayPlanning\CreateDayPlanningUseCase;
+use App\BusinessLogic\Models\Schedule;
+use App\BusinessLogic\UseCases\Schedule\CreateScheduleUseCase;
 use DateTime;
 use Exception;
 use PHPUnit\Framework\Attributes\Test;
 use PHPUnit\Framework\TestCase;
 
-class createDayPlanningTest extends TestCase
+class CreateScheduleTest extends TestCase
 {
     #[Test]
-    public function day_planning_should_be_the_same_date(): void
+    public function schedule_should_be_the_same_date(): void
     {
 
         $startTime = new DateTime("2024-01-01 08:00");
@@ -42,7 +42,7 @@ class createDayPlanningTest extends TestCase
     }
 
     #[Test]
-    public function do_not_create_day_planning_if_one_already_exists(): void
+    public function do_not_create_schedule_if_one_already_exists(): void
     {
         $startTime = new DateTime("2024-01-01 08:00");
         $endTime = new DateTime("2024-01-01 09:00");
@@ -53,10 +53,10 @@ class createDayPlanningTest extends TestCase
 
     private function assertExpectException(Child $child, DateTime $startTime, DateTime $endTime): void
     {
-        $dailyPlanning = new FakeDailyPlanningRepository();
-        $dailyPlanning->dailyPlannings[$startTime->format('Y-m-d')] = new DailyPlanning($child, $startTime, $endTime);
+        $scheduleRepository = new FakeScheduleRepository();
+        $scheduleRepository->schedules[$startTime->format('Y-m-d')] = new Schedule($child, $startTime, $endTime);
 
-        $createDayPlanningUseCase = new CreateDayPlanningUseCase($dailyPlanning);
+        $createDayPlanningUseCase = new CreateScheduleUseCase($scheduleRepository);
         $this->expectException(Exception::class);
         $createDayPlanningUseCase->execute($child, $startTime, $endTime);
     }

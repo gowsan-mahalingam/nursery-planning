@@ -11,14 +11,14 @@ use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-class DayPlanningControllerTest extends WebTestCase
+class ScheduleControllerTest extends WebTestCase
 {
     use ResetDatabase, Factories;
     #[Test]
     public function should_not_allowed_without_authentication(): void
     {
         $client = static::createClient();
-        $client->request('POST', '/day-planning', [
+        $client->request('POST', '/schedule', [
             'date' => '2024-01-01',
             'startTime' => '09:00',
             'endTime' => '17:00'
@@ -30,7 +30,7 @@ class DayPlanningControllerTest extends WebTestCase
     }
 
     #[Test]
-    public function create_day_planning(): void
+    public function create_schedule(): void
     {
         $client = static::createClient();
         $parent = ParentsFactory::createOne()->_real();
@@ -41,7 +41,7 @@ class DayPlanningControllerTest extends WebTestCase
 
         $client->loginUser($parent);
 
-        $client->request('POST', '/day-planning', [
+        $client->request('POST', '/schedule', [
             'date' => '2024-01-01',
             'startTime' => '09:00',
             'endTime' => '17:00'

@@ -23,8 +23,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    App\Adapters\Secondary\Repositories\DailyPlanningRepositoryInterface:
-        class: App\Adapters\Secondary\Repositories\Doctrine\DailyPlanningRepository
+    App\Adapters\Secondary\Repositories\ScheduleRepositoryInterface:
+        class: App\Adapters\Secondary\Repositories\Doctrine\ScheduleRepository
         public: true
 
     App\Adapters\Secondary\Repositories\ChildRepositoryInterface:

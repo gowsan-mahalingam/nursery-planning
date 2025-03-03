@@ -2,20 +2,20 @@
 
 namespace App\Adapters\Secondary\Repositories\Doctrine;
 
-use App\Adapters\Secondary\Repositories\DailyPlanningRepositoryInterface;
-use App\BusinessLogic\Models\DailyPlanning;
+use App\Adapters\Secondary\Repositories\ScheduleRepositoryInterface;
+use App\BusinessLogic\Models\Child;
+use App\BusinessLogic\Models\Schedule;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
-use App\BusinessLogic\Models\Child;
 
-class DailyPlanningRepository extends ServiceEntityRepository implements DailyPlanningRepositoryInterface
+class ScheduleRepository extends ServiceEntityRepository implements ScheduleRepositoryInterface
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, DailyPlanning::class);
+        parent::__construct($registry, Schedule::class);
     }
 
-    public function getByDate(Child $child, \DateTime $date): ?DailyPlanning
+    public function getByDate(Child $child, \DateTime $date): ?Schedule
     {
         $qb = $this->createQueryBuilder('dp')
             ->where('dp.child = :child')
@@ -26,7 +26,7 @@ class DailyPlanningRepository extends ServiceEntityRepository implements DailyPl
         return $qb->getQuery()->getOneOrNullResult();
     }
 
-    public function save(DailyPlanning $dailyPanning): void
+    public function save(Schedule $dailyPanning): void
     {
         $this->getEntityManager()->persist($dailyPanning);
         $this->getEntityManager()->flush();

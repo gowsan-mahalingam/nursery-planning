@@ -2,15 +2,15 @@
 
 namespace App\Tests\Factory;
 
-use App\BusinessLogic\Models\DailyPlanning;
+use App\BusinessLogic\Models\Schedule;
 use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
-final class DailyPlanningFactory extends PersistentProxyObjectFactory
+final class ScheduleFactory extends PersistentProxyObjectFactory
 {
 
     public static function class(): string
     {
-        return DailyPlanning::class;
+        return Schedule::class;
     }
 
     protected function defaults(): array|callable

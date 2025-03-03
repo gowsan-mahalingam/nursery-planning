@@ -3,14 +3,14 @@
 namespace App\BusinessLogic\Models;
 
 
-use App\Adapters\Secondary\Repositories\Doctrine\DailyPlanningRepository;
+use App\Adapters\Secondary\Repositories\Doctrine\ScheduleRepository;
 use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
-#[ORM\Entity(repositoryClass: dailyplanningrepository::class)]
-class DailyPlanning
+#[ORM\Entity(repositoryClass: ScheduleRepository::class)]
+class Schedule
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]

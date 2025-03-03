@@ -3,7 +3,8 @@
 namespace App\Adapters\Primary\Controller\Model;
 
 use Symfony\Component\Validator\Constraints as Assert;
-class PostDayPlanningDto
+
+class PostScheduleDto
 {
     public function __construct(
         #[Assert\NotBlank]
