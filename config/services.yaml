@@ -30,3 +30,11 @@ services:
     App\Adapters\Secondary\Repositories\ChildRepositoryInterface:
         class: App\Adapters\Secondary\Repositories\Doctrine\ChildRepository
         public: true
+
+    App\Tests\Factory\:
+        resource: '../tests/Factory'
+        tags: ['foundry.factory']
+
+    App\Tests\Fixtures\:
+        resource: '../tests/Fixtures'
+        tags: ['doctrine.fixture.orm']
